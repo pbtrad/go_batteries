@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"log"
 	"time"
 
@@ -31,7 +32,10 @@ func main() {
 
 	ctx := context.Background()
 	row, err := queries.GetFastPowerData(ctx, params)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		log.Println("No data found for this query.")
+		return
+	} else if err != nil {
 		log.Fatalf("Query failed: %v", err)
 	}
 

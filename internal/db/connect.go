@@ -17,10 +17,15 @@ func ConnectDB() (*sql.DB, error) {
 
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
+	// dbHost := os.Getenv("DB_HOST")
 	dbHost := os.Getenv("DB_HOST")
+	if dbHost == "localhost" || dbHost == "" {
+		dbHost = "127.0.0.1" // Force IPv4 instead of IPv6 (::1)
+	}
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
+	// dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	db, err := sql.Open("mysql", dsn)
@@ -32,6 +37,6 @@ func ConnectDB() (*sql.DB, error) {
 		return nil, fmt.Errorf("error connecting to database: %w", err)
 	}
 
-	log.Println("Connected to MariaDB successfully.")
+	log.Println("Connected to MySQL successfully.")
 	return db, nil
 }
