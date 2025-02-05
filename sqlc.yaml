@@ -1,0 +1,16 @@
+version: "2"
+sql:
+  - schema: "migrations/"
+    queries: "queries/"
+    engine: "mysql"
+    gen:
+      go:
+        package: "db"
+        out: "internal/db"
+        sql_package: "database/sql"
+overrides:
+  go: null
+plugins: []
+rules: []
+options: {}
+
