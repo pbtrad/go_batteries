@@ -36,6 +36,27 @@ services:
       DB_NAME: ${DB_NAME}
     ports:
       - "8080:8080"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  seed:
+    build: .
+    container_name: go_batteries_seed
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME}
+    entrypoint: ["go", "run", "cmd/scripts/seed.go"]
+    restart: "no"
 
 volumes:
   mysql_data:
+
