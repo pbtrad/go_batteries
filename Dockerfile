@@ -7,7 +7,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN go build -o main cmd/main.go
+RUN go build -o main cmd/api/main.go
 
 EXPOSE 8080
 
