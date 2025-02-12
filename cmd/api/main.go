@@ -16,7 +16,13 @@ func main() {
 	// SonnenBatterie API
 	sonnen := router.Group("/api/sonnen")
 	{
+		// Status and latest data
 		sonnen.GET("/status", batteries.GetSonnenStatus)
+		sonnen.GET("/latestdata", batteries.GetLatestData)
+		sonnen.GET("/powermeter", batteries.GetPowerMeterData)
+		sonnen.GET("/energy", batteries.GetEnergyData)
+
+		// Charge and discharge
 		sonnen.POST("/setpoint/charge/:watt", batteries.ChargeSonnen)
 		sonnen.POST("/setpoint/discharge/:watt", batteries.DischargeSonnen)
 	}
