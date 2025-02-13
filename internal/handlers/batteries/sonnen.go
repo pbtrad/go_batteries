@@ -68,6 +68,7 @@ func GetLatestData(c *gin.Context) {
 	batteryLock.Lock()
 	defer batteryLock.Unlock()
 
+	batteryState.Timestamp = time.Now().Format(time.RFC3339)
 	c.JSON(http.StatusOK, gin.H{
 		"RSOC":          batteryState.RSOC,
 		"Consumption_W": batteryState.Consumption_W,
@@ -101,29 +102,39 @@ func DischargeSonnen(c *gin.Context) {
 
 // Mock power meter data
 func GetPowerMeterData(c *gin.Context) {
+	batteryLock.Lock()
+	defer batteryLock.Unlock()
+
+	current := float64(batteryState.Consumption_W) / 230.0
+	totalPower := batteryState.Consumption_W + batteryState.Production_W
+
 	c.JSON(http.StatusOK, gin.H{
 		"Voltage_L1": 230.0,
-		"Current_L1": 10.5,
-		"Power_L1":   2415,
+		"Current_L1": current,
+		"Power_L1":   batteryState.Consumption_W,
 		"Voltage_L2": 230.0,
-		"Current_L2": 8.0,
-		"Power_L2":   1840,
+		"Current_L2": current * 0.8,
+		"Power_L2":   batteryState.Production_W,
 		"Voltage_L3": 230.0,
-		"Current_L3": 9.2,
-		"Power_L3":   2116,
-		"TotalPower": 6371,
+		"Current_L3": current * 1.1,
+		"Power_L3":   batteryState.Production_W * 1,
+		"TotalPower": totalPower,
 		"Timestamp":  time.Now().Format(time.RFC3339),
 	})
 }
 
 // Returns mock historical energy data
 func GetEnergyData(c *gin.Context) {
+	batteryLock.Lock()
+	defer batteryLock.Unlock()
+
+	batteryState.Timestamp = time.Now().Format(time.RFC3339)
 	c.JSON(http.StatusOK, gin.H{
 		"TotalConsumption_kWh":     1500.5,
 		"TotalProduction_kWh":      1300.2,
 		"TotalGridFeedIn_kWh":      100.8,
 		"TotalGridConsumption_kWh": 200.5,
-		"Timestamp":                time.Now().Format(time.RFC3339),
+		"Timestamp":                batteryState.Timestamp,
 	})
 }
 
@@ -132,13 +143,17 @@ func simulateCharging(watt int) {
 	batteryLock.Lock()
 	defer batteryLock.Unlock()
 
+	if batteryState.RSOC >= 100 {
+		batteryState.BatteryCharging = false
+		return
+	}
+
 	batteryState.BatteryCharging = true
-	for i := 0; i < 10; i++ {
-		if batteryState.RSOC >= 100 {
-			batteryState.RSOC = 100
-			break
-		}
+	for batteryState.RSOC < 100 {
 		batteryState.RSOC += float64(watt) / 10000
+		if batteryState.RSOC > 100 {
+			batteryState.RSOC = 100
+		}
 		time.Sleep(1 * time.Second)
 	}
 	batteryState.BatteryCharging = false
@@ -149,13 +164,17 @@ func simulateDischarging(watt int) {
 	batteryLock.Lock()
 	defer batteryLock.Unlock()
 
+	if batteryState.RSOC <= 0 {
+		batteryState.BatteryDischarging = false
+		return
+	}
+
 	batteryState.BatteryDischarging = true
-	for i := 0; i < 10; i++ {
-		if batteryState.RSOC <= 0 {
-			batteryState.RSOC = 0
-			break
-		}
+	for batteryState.RSOC > 0 {
 		batteryState.RSOC -= float64(watt) / 10000
+		if batteryState.RSOC < 0 {
+			batteryState.RSOC = 0
+		}
 		time.Sleep(1 * time.Second)
 	}
 	batteryState.BatteryDischarging = false
