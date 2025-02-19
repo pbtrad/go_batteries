@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package batteries.v1;
+
+option go_package = "github.com/pbtrad/go_batteries/proto/batteries/v1;batteriesv1";
+
+service BatteriesService {
+  rpc GetSonnenStatus(GetSonnenStatusRequest) returns (GetSonnenStatusResponse) {}
+  rpc GetLatestData(GetLatestDataRequest) returns (GetLatestDataResponse) {}
+  rpc GetPowerMeterData(GetPowerMeterDataRequest) returns (GetPowerMeterDataResponse) {}
+  rpc GetEnergyData(GetEnergyDataRequest) returns (GetEnergyDataResponse) {}
+  rpc ChargeSonnen(ChargeSonnenRequest) returns (ChargeSonnenResponse) {}
+  rpc DischargeSonnen(DischargeSonnenRequest) returns (DischargeSonnenResponse) {}
+}
+
+message GetSonnenStatusRequest {}
+
+message GetSonnenStatusResponse {
+  int32 apparent_output = 1;
+  int32 backup_buffer = 2;
+  bool battery_charging = 3;
+  bool battery_discharging = 4;
+  int32 consumption_w = 5;
+  double fac = 6;
+  bool flow_consumption_battery = 7;
+  bool flow_consumption_grid = 8;
+  bool flow_consumption_production = 9;
+  int32 grid_feed_in_w = 10;
+  int32 is_system_installed = 11;
+  int32 operating_mode = 12;
+  int32 pac_total_w = 13;
+  int32 production_w = 14;
+  double rsoc = 15;
+  string system_status = 16;
+  string timestamp = 17;
+}
+
+message GetLatestDataRequest {}
+
+message GetLatestDataResponse {
+  double rsoc = 1;
+  int32 consumption_w = 2;
+  int32 production_w = 3;
+  int32 grid_feed_in_w = 4;
+  string timestamp = 5;
+}
+
+message GetPowerMeterDataRequest {}
+
+message GetPowerMeterDataResponse {
+  double voltage_l1 = 1;
+  double current_l1 = 2;
+  double power_l1 = 3;
+  double voltage_l2 = 4;
+  double current_l2 = 5;
+  double power_l2 = 6;
+  double voltage_l3 = 7;
+  double current_l3 = 8;
+  double power_l3 = 9;
+  double total_power = 10;
+  string timestamp = 11;
+}
+
+message GetEnergyDataRequest {}
+
+message GetEnergyDataResponse {
+  double total_consumption_kwh = 1;
+  double total_production_kwh = 2;
+  double total_grid_feed_in_kwh = 3;
+  double total_grid_consumption_kwh = 4;
+  string timestamp = 5;
+}
+
+message ChargeSonnenRequest {
+  int32 watt = 1;
+}
+
+message ChargeSonnenResponse {
+  bool success = 1;
+  string message = 2;
+  int32 watt = 3;
+}
+
+message DischargeSonnenRequest {
+  int32 watt = 1;
+}
+
+message DischargeSonnenResponse {
+  bool success = 1;
+  string message = 2;
+  int32 watt = 3;
+}
