@@ -9,6 +9,15 @@ Modern homes equipped with battery storage systems (such as Tesla Powerwall, Son
 - **Analyzes energy flow** between the grid, home, and battery.
 - **Stores and processes energy data** to optimize energy usage.
 
+### Technologies
+- **Go (Golang)** - Primary programming language
+- **gRPC** - High-performance RPC framework for service communication
+- **Protocol Buffers** - Language-neutral data serialization format
+- **PostgreSQL** - Primary database for storing battery and energy data
+- **SQLc** - SQL query generation for Go
+- **gRPC Reflection** - Runtime API inspection capabilities
+- **Protocol Buffers** - API contract definition and code generation
+
 ## Data Management
 
 ### **Fast Power Data**
