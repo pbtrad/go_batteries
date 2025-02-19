@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/pbtrad/go_batteries/proto/batteries/v1"
+	pb "github.com/pbtrad/go_batteries/proto/batteries/v1/sonnen"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -34,7 +34,7 @@ type BatteryState struct {
 }
 
 type BatteryServer struct {
-	pb.UnimplementedBatteriesServiceServer
+	pb.UnimplementedSonnenBatteriesServiceServer
 	batteryState BatteryState
 	batteryLock  sync.Mutex
 }

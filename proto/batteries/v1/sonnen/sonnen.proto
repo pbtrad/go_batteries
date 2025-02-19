@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package batteries.v1;
+package batteries.v1.sonnen;
 
 option go_package = "github.com/pbtrad/go_batteries/proto/batteries/v1/sonnen";
 
-service BatteriesService {
+service SonnenBatteriesService {
   rpc GetSonnenStatus(GetSonnenStatusRequest) returns (GetSonnenStatusResponse) {}
   rpc GetLatestData(GetLatestDataRequest) returns (GetLatestDataResponse) {}
   rpc GetPowerMeterData(GetPowerMeterDataRequest) returns (GetPowerMeterDataResponse) {}

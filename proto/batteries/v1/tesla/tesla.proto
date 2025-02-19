@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package batteries.v1;
+package batteries.v1.tesla;
 
 option go_package = "github.com/pbtrad/go_batteries/proto/batteries/v1/tesla";
 
