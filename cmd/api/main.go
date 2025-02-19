@@ -2,35 +2,32 @@ package main
 
 import (
 	"log"
+	"net"
 	"os"
 
 	"github.com/pbtrad/go_batteries/internal/handlers/batteries"
-
-	"github.com/gin-gonic/gin"
+	pb "github.com/pbtrad/go_batteries/proto/batteries/v1"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
-	router := gin.Default()
-	router.SetTrustedProxies(nil)
-
-	// SonnenBatterie API
-	sonnen := router.Group("/api/sonnen")
-	{
-		// Status and latest data
-		sonnen.GET("/status", batteries.GetSonnenStatus)
-		sonnen.GET("/latestdata", batteries.GetLatestData)
-		sonnen.GET("/powermeter", batteries.GetPowerMeterData)
-		sonnen.GET("/energy", batteries.GetEnergyData)
-
-		// Charge and discharge
-		sonnen.POST("/setpoint/charge/:watt", batteries.ChargeSonnen)
-		sonnen.POST("/setpoint/discharge/:watt", batteries.DischargeSonnen)
-	}
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "50051"
 	}
 
-	log.Printf("API running on port %s", port)
-	router.Run(":" + port)
+	lis, err := net.Listen("tcp", ":"+port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := grpc.NewServer()
+	pb.RegisterBatteriesServiceServer(s, batteries.NewBatteryServer())
+	reflection.Register(s)
+
+	log.Printf("gRPC server running on port %s", port)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }
