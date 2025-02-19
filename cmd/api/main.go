@@ -6,7 +6,8 @@ import (
 	"os"
 
 	"github.com/pbtrad/go_batteries/internal/handlers/batteries"
-	pb "github.com/pbtrad/go_batteries/proto/batteries/v1"
+	sonnen "github.com/pbtrad/go_batteries/proto/batteries/v1"
+	tesla "github.com/pbtrad/go_batteries/proto/batteries/v1/tesla"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -23,7 +24,10 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterBatteriesServiceServer(s, batteries.NewBatteryServer())
+
+	sonnen.RegisterBatteriesServiceServer(s, batteries.NewBatteryServer())
+	tesla.RegisterTeslaBatteryServiceServer(s, batteries.NewTeslaBatteryServer())
+
 	reflection.Register(s)
 
 	log.Printf("gRPC server running on port %s", port)
