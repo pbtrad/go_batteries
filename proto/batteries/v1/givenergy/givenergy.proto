@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package batteries.v1.givenergy;
+
+option go_package = "github.com/pbtrad/go_batteries/proto/batteries/v1/givenergy";
+
+service GivEnergyService {
+  rpc GetBatteryState(GetBatteryStateRequest) returns (GetBatteryStateResponse) {}
+  rpc GetLatestData(GetLatestDataRequest) returns (GetLatestDataResponse) {}
+  rpc GetPowerFlow(GetPowerFlowRequest) returns (GetPowerFlowResponse) {}
+  rpc GetEnergySummary(GetEnergySummaryRequest) returns (GetEnergySummaryResponse) {}
+  rpc GetBatteryTemperature(GetBatteryTemperatureRequest) returns (GetBatteryTemperatureResponse) {}
+  rpc ChargeBattery(ChargeBatteryRequest) returns (ChargeBatteryResponse) {}
+  rpc DischargeBattery(DischargeBatteryRequest) returns (DischargeBatteryResponse) {}
+}
+
+message GetBatteryStateRequest {}
+
+message GetBatteryStateResponse {
+  string system_serial_number = 1;
+  float battery_soc = 2;
+  bool battery_charging = 3;
+  bool battery_discharging = 4;
+  string system_status = 5;
+  string timestamp = 6;
+}
+
+message GetLatestDataRequest {}
+
+message GetLatestDataResponse {
+  float battery_soc = 1;
+  float power_flow_battery_to_load = 2;
+  float power_flow_solar_to_battery = 3;
+  float power_flow_grid_to_battery = 4;
+  float power_flow_battery_to_grid = 5;
+  string timestamp = 6;
+}
+
+message GetPowerFlowRequest {}
+
+message GetPowerFlowResponse {
+  float grid_power = 1;
+  float solar_power = 2;
+  float battery_power = 3;
+  string timestamp = 4;
+}
+
+message GetEnergySummaryRequest {}
+
+message GetEnergySummaryResponse {
+  float total_solar_generated = 1;
+  float total_battery_stored = 2;
+  float total_battery_used = 3;
+  float total_grid_imported = 4;
+  float total_grid_exported = 5;
+  string timestamp = 6;
+}
+
+message GetBatteryTemperatureRequest {}
+
+message GetBatteryTemperatureResponse {
+  float temperature = 1;
+  string timestamp = 2;
+}
+
+message ChargeBatteryRequest {
+  int32 watt = 1;
+}
+
+message ChargeBatteryResponse {
+  bool success = 1;
+  string message = 2;
+  int32 watt = 3;
+}
+
+message DischargeBatteryRequest {
+  int32 watt = 1;
+}
+
+message DischargeBatteryResponse {
+  bool success = 1;
+  string message = 2;
+  int32 watt = 3;
+}
+
