@@ -111,7 +111,7 @@ func (s *BatteryServer) GetPowerMeterData(ctx context.Context, req *pb.GetPowerM
 	current := float64(s.batteryState.Consumption_W) / 230.0
 	totalPower := float64(s.batteryState.Consumption_W + s.batteryState.Production_W)
 
-	log.Printf("Preparing response with current: %f, totalPower: %f", current, totalPower) // Add this
+	log.Printf("Preparing response with current: %f, totalPower: %f", current, totalPower)
 
 	response := &pb.GetPowerMeterDataResponse{
 		VoltageL1:  230.0,
