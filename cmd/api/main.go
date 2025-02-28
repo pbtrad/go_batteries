@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/pbtrad/go_batteries/internal/handlers/batteries"
+	givenergy "github.com/pbtrad/go_batteries/proto/batteries/v1/givenergy"
 	sonnen "github.com/pbtrad/go_batteries/proto/batteries/v1/sonnen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -25,6 +26,7 @@ func main() {
 	s := grpc.NewServer()
 
 	sonnen.RegisterSonnenBatteriesServiceServer(s, batteries.NewBatteryServer())
+	givenergy.RegisterGivEnergyServiceServer(s, batteries.NewGivEnergyBatteryServer())
 
 	reflection.Register(s)
 
